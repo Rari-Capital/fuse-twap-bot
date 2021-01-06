@@ -1,7 +1,7 @@
 {
   "name": "fuse-twap-bot",
   "version": "0.1.0",
-  "description": "Spends gas to compute TWAPs for Uniswap V2 pairs and post to Fuse price oracles.",
+  "description": "Computes TWAPs for Uniswap V2 pairs and posts to Fuse price oracles.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
