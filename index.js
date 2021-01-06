@@ -1,16 +1,19 @@
-import Web3 from 'web3';
-
-var web3 = new Web3(new Web3.providers.HttpProvider(process.env.WEB3_HTTP_PROVIDER_URL));
-const preferredPriceOracleAbi = JSON.parse(fs.readFileSync(__dirname + '/abi/PreferredPriceOracle.json', 'utf8'));
-const uniswapViewAbi = JSON.parse(fs.readFileSync(__dirname + '/abi/UniswapView.json', 'utf8'));
+const Web3 = require("web3");
+const web3 = new Web3(new Web3.providers.HttpProvider(process.env.WEB3_HTTP_PROVIDER_URL));
+const preferredPriceOracleAbi = require(__dirname + '/abi/PreferredPriceOracle.json');
+const uniswapViewAbi = require(__dirname + '/abi/UniswapView.json');
 var priceOracleContract = new web3.eth.Contract(preferredPriceOracleAbi, process.env.PRICE_ORACLE_CONTRACT_ADDRESS);
-
-try {
-    process.env.PRICE_ORACLE_CONTRACT_ADDRESS = await priceOracleContract.methods.secondaryOracle();
-} catch { }
-
-priceOracleContract = new web3.eth.Contract(uniswapViewAbi, process.env.PRICE_ORACLE_CONTRACT_ADDRESS);
 var symbols = process.env.SUPPORTED_SYMBOLS.split(',');
+
+(async function() {
+    try {
+        process.env.PRICE_ORACLE_CONTRACT_ADDRESS = await priceOracleContract.methods.secondaryOracle().call();
+    } catch { }
+
+    priceOracleContract = new web3.eth.Contract(uniswapViewAbi, process.env.PRICE_ORACLE_CONTRACT_ADDRESS);
+    setInterval(computeAndPostTwaps, process.env.TWAP_POSTING_INTERVAL_SECONDS);
+    computeAndPostTwaps();
+})();
 
 async function computeAndPostTwaps() {
     // Create swapExactETHForTokens transaction
@@ -20,7 +23,7 @@ async function computeAndPostTwaps() {
     var tx = {
         from: process.env.ETHEREUM_ADMIN_ACCOUNT,
         to: process.env.PRICE_ORACLE_CONTRACT_ADDRESS,
-        value: value,
+        value: 0,
         data: data,
         nonce: await web3.eth.getTransactionCount(process.env.ETHEREUM_ADMIN_ACCOUNT)
     };
@@ -51,6 +54,3 @@ async function computeAndPostTwaps() {
     console.log("Successfully sent postPrices transaction:", sentTx);
     return sentTx;
 }
-
-setInterval(computeAndPostTwaps, process.env.TWAP_POSTING_INTERVAL_SECONDS);
-computeAndPostTwaps();
