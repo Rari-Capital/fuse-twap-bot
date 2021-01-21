@@ -8,13 +8,23 @@ The [`UniswapView` price oracle](https://github.com/Rari-Capital/open-oracle/blo
 
 ## Installation
 
-We had success building the dApp using Node.js `v12.16.1` with the latest version of NPM.
+You'll want to run the script on the latest Node.js LTS (tested with v12.16.1) with the latest version of NPM.
 
-To install the bot's dependencies: `npm install`
+Install PM2 (process manager) globally: `npm i -g pm2`
 
-## Running the bot
+Install `fuse-twap-bot` dependencies: `npm i` or `npm install`
 
-`npm start`
+## Usage
+
+Configure your environment in `ecosystem.config.js`.
+
+Start the rebalancer with PM2: `pm2 start ecosystem.config.js` (for production usage, add `--env production`)
+
+Stop with PM2: `pm2 stop ecosystem.config.js`
+
+Check process status with PM2: `pm2 list`
+
+Find PM2 logs in `~/.pm2/logs`.
 
 ## License
 
