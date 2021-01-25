@@ -3,7 +3,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider(process.env.WEB3_HTTP_PROV
 const preferredPriceOracleAbi = require(__dirname + '/abi/PreferredPriceOracle.json');
 const uniswapViewAbi = require(__dirname + '/abi/UniswapView.json');
 var priceOracleContract = new web3.eth.Contract(preferredPriceOracleAbi, process.env.PRICE_ORACLE_CONTRACT_ADDRESS);
-var symbols = process.env.SUPPORTED_SYMBOLS.split(',');
+var underlyings = process.env.SUPPORTED_UNDERLYING_TOKEN_ADDRESSES.split(',');
 
 (async function() {
     try {
@@ -17,7 +17,7 @@ var symbols = process.env.SUPPORTED_SYMBOLS.split(',');
 
 async function computeAndPostTwaps() {
     // Create swapExactETHForTokens transaction
-    var data = priceOracleContract.methods.postPrices(symbols).encodeABI();
+    var data = priceOracleContract.methods.postPrices(underlyings).encodeABI();
 
     // Build transaction
     var tx = {
