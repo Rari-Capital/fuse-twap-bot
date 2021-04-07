@@ -10,7 +10,11 @@
     "type": "git",
     "url": "https://github.com/Rari-Capital/fuse-twap-bot.git"
   },
-  "author": "David Lucid <david@rari.capital>",
+  "author": {
+    "name": "David Lucid",
+    "email": "david@rari.capital",
+    "url": "https://github.com/davidlucid"
+  },
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {
     "url": "https://github.com/Rari-Capital/fuse-twap-bot/issues"
