@@ -71,6 +71,7 @@ async function updateCumulativePrices(pairs, useNonce, transactionHashCallback) 
         nonce: useNonce !== undefined && useNonce !== null ? useNonce : await web3.eth.getTransactionCount(process.env.ETHEREUM_ADMIN_ACCOUNT)
     };
 
+    if (useNonce !== undefined && useNonce !== null) tx["gasPrice"] = Web3.utils.toBN(await web3.eth.getGasPrice()).mul(120).div(100).toString();
     if (process.env.NODE_ENV !== "production") console.log("Signing and sending update transaction:", tx);
 
     // Estimate gas for transaction
