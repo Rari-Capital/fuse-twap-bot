@@ -44,7 +44,7 @@ async function tryUpdateCumulativePrices() {
     // Get workable pairs and validate
     var workable = await rootPriceOracleContract.methods.workable(pairs, minPeriods, deviationThresholds).call();
     var workablePairs = [];
-    for (var i = 0; i < supportedPairs.length; i++) if (workable[i]) workablePairs.push(supportedPairs[i]);
+    for (var i = 0; i < workable.length; i++) if (workable[i]) workablePairs.push(pairs[i]);
     if (workablePairs.length <= 0) return null;
 
     // Update cumulative prices and return TX
