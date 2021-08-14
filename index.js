@@ -20,7 +20,7 @@ async function tryUpdateCumulativePrices() {
 
         if (lastTransaction && lastTransaction.blockNumber === null) {
             // Transaction found and block not yet mined
-            if (lastTransactionSent < ((new Date()).getTime() / 1000) - 300) useNonce = lastTransaction.nonce;
+            if (lastTransactionSent < ((new Date()).getTime() / 1000) - 120) useNonce = lastTransaction.nonce;
             else return null;
         } else {
             // Transaction not found or block already mined => no more pending TX
@@ -44,7 +44,17 @@ async function tryUpdateCumulativePrices() {
     // Get workable pairs and validate
     var workable = await rootPriceOracleContract.methods.workable(pairs, minPeriods, deviationThresholds).call();
     var workablePairs = [];
-    for (var i = 0; i < workable.length; i++) if (workable[i]) workablePairs.push(pairs[i]);
+
+    for (var i = 0; i < workable.length; i++) {
+        if (workable[i]) {
+            var epochNow = (new Date()).getTime() / 1000;
+            if (workableSince < epochNow - 300) workablePairs.push(pairs[i]);
+            else if (workableSince < 0) workableSince = epochNow;
+        } else {
+            workableSince = -1;
+        }
+    }
+
     if (workablePairs.length <= 0) return null;
 
     // Update cumulative prices and return TX
