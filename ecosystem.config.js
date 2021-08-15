@@ -20,6 +20,7 @@ module.exports = {
       DEFAULT_DEVIATION_THRESHOLD: 0.05, 
       WEB3_HTTP_PROVIDER_URL: "http://localhost:8546",
       TWAP_UPDATE_ATTEMPT_INTERVAL_SECONDS: 60,
+      SPEED_UP_TRANSACTION_AFTER_SECONDS: 120,
       REDUNDANCY_DELAY_SECONDS: 0 // Set to an integer greater than 0 to delay posting TWAPs for redundancy
     },
     env_production: {
@@ -32,6 +33,7 @@ module.exports = {
       DEFAULT_DEVIATION_THRESHOLD: 0.05,
       WEB3_HTTP_PROVIDER_URL: "http://localhost:8545",
       TWAP_UPDATE_ATTEMPT_INTERVAL_SECONDS: 30,
+      SPEED_UP_TRANSACTION_AFTER_SECONDS: 120,
       REDUNDANCY_DELAY_SECONDS: 0 // Set to an integer greater than 0 to delay posting TWAPs for redundancy
     }
   }]

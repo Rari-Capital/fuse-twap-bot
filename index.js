@@ -20,7 +20,7 @@ async function tryUpdateCumulativePrices() {
 
         if (lastTransaction && lastTransaction.blockNumber === null) {
             // Transaction found and block not yet mined
-            if (lastTransactionSent < ((new Date()).getTime() / 1000) - 120) useNonce = lastTransaction.nonce;
+            if (lastTransactionSent < ((new Date()).getTime() / 1000) - parseInt(process.env.SPEED_UP_TRANSACTION_AFTER_SECONDS)) useNonce = lastTransaction.nonce;
             else return null;
         } else {
             // Transaction not found or block already mined => no more pending TX
