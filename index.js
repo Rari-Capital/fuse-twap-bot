@@ -5,6 +5,7 @@ var rootPriceOracleContract = new web3.eth.Contract(uniswapTwapPriceOracleRootAb
 var supportedPairs = process.env.SUPPORTED_PAIRS.split(',');
 var lastTransactionHash = null;
 var lastTransactionSent = null;
+var workableSince = {};
 
 setInterval(tryUpdateCumulativePrices, process.env.TWAP_UPDATE_ATTEMPT_INTERVAL_SECONDS * 1000);
 tryUpdateCumulativePrices();
@@ -50,10 +51,10 @@ async function tryUpdateCumulativePrices() {
         for (var i = 0; i < workable.length; i++) {
             if (workable[i]) {
                 var epochNow = (new Date()).getTime() / 1000;
-                if (workableSince < epochNow - parseInt(process.env.REDUNDANCY_DELAY_SECONDS)) redundancyDelayPassed = true;
-                else if (workableSince < 0) workableSince = epochNow;
+                if (workableSince[pairs[i]] < epochNow - parseInt(process.env.REDUNDANCY_DELAY_SECONDS)) redundancyDelayPassed = true;
+                else if (workableSince[pairs[i]] === undefined) workableSince[pairs[i]] = epochNow;
             } else {
-                workableSince = -1;
+                workableSince[pairs[i]] = undefined;
             }
         }
 
