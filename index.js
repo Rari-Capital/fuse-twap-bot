@@ -1,6 +1,6 @@
 const Web3 = require("web3");
 const web3 = new Web3(new Web3.providers.HttpProvider(process.env.WEB3_HTTP_PROVIDER_URL));
-const uniswapTwapPriceOracleRootAbi = require(__dirname + '/abi/UniswapTwapPriceOracleRoot.json');
+const uniswapTwapPriceOracleRootAbi = require(__dirname + '/abi/UniswapTwapPriceOracleV2Root.json');
 var rootPriceOracleContract = new web3.eth.Contract(uniswapTwapPriceOracleRootAbi, process.env.ROOT_PRICE_ORACLE_CONTRACT_ADDRESS);
 var supportedPairs = process.env.SUPPORTED_PAIRS.split(',');
 var lastTransactionHash = null;
@@ -32,18 +32,20 @@ async function tryUpdateCumulativePrices() {
 
     // Get pairs, min periods, and deviation thresholds
     var pairs = [];
+    var baseTokens = [];
     var minPeriods = [];
     var deviationThresholds = [];
 
     for (var i = 0; i < supportedPairs.length; i++) {
         var parts = supportedPairs[i].split("|");
         pairs[i] = parts[0];
-        minPeriods[i] = parts[1] !== undefined ? parts[1] : process.env.DEFAULT_MIN_PERIOD;
-        deviationThresholds[i] = Web3.utils.toBN(Math.trunc((parts[2] !== undefined ? parts[2] : process.env.DEFAULT_DEVIATION_THRESHOLD) * 1e18));
+        baseTokens[i] = parts[1];
+        minPeriods[i] = parts[2] !== undefined ? parts[2] : process.env.DEFAULT_MIN_PERIOD;
+        deviationThresholds[i] = Web3.utils.toBN(Math.trunc((parts[3] !== undefined ? parts[3] : process.env.DEFAULT_DEVIATION_THRESHOLD) * 1e18));
     }
 
     // Get workable pairs and validate
-    var workable = await rootPriceOracleContract.methods.workable(pairs, minPeriods, deviationThresholds).call();
+    var workable = await rootPriceOracleContract.methods.workable(pairs, baseTokens, minPeriods, deviationThresholds).call();
 
     if (parseInt(process.env.REDUNDANCY_DELAY_SECONDS) > 0) {
         var redundancyDelayPassed = false;
