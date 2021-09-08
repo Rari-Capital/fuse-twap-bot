@@ -5,6 +5,7 @@ var rootPriceOracleContract = new web3.eth.Contract(uniswapTwapPriceOracleRootAb
 var supportedPairs = process.env.SUPPORTED_PAIRS.split(',');
 var lastTransactionHash = null;
 var lastTransactionSent = null;
+var workableSince = {};
 
 setInterval(tryUpdateCumulativePrices, process.env.TWAP_UPDATE_ATTEMPT_INTERVAL_SECONDS * 1000);
 tryUpdateCumulativePrices();
@@ -20,7 +21,7 @@ async function tryUpdateCumulativePrices() {
 
         if (lastTransaction && lastTransaction.blockNumber === null) {
             // Transaction found and block not yet mined
-            if (lastTransactionSent < ((new Date()).getTime() / 1000) - 300) useNonce = lastTransaction.nonce;
+            if (lastTransactionSent < ((new Date()).getTime() / 1000) - parseInt(process.env.SPEED_UP_TRANSACTION_AFTER_SECONDS)) useNonce = lastTransaction.nonce;
             else return null;
         } else {
             // Transaction not found or block already mined => no more pending TX
@@ -43,6 +44,23 @@ async function tryUpdateCumulativePrices() {
 
     // Get workable pairs and validate
     var workable = await rootPriceOracleContract.methods.workable(pairs, minPeriods, deviationThresholds).call();
+
+    if (parseInt(process.env.REDUNDANCY_DELAY_SECONDS) > 0) {
+        var redundancyDelayPassed = false;
+
+        for (var i = 0; i < workable.length; i++) {
+            if (workable[i]) {
+                var epochNow = (new Date()).getTime() / 1000;
+                if (workableSince[pairs[i]] < epochNow - parseInt(process.env.REDUNDANCY_DELAY_SECONDS)) redundancyDelayPassed = true;
+                else if (workableSince[pairs[i]] === undefined) workableSince[pairs[i]] = epochNow;
+            } else {
+                workableSince[pairs[i]] = undefined;
+            }
+        }
+
+        if (!redundancyDelayPassed) return null;
+    }
+
     var workablePairs = [];
     for (var i = 0; i < workable.length; i++) if (workable[i]) workablePairs.push(pairs[i]);
     if (workablePairs.length <= 0) return null;
