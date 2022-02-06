@@ -1,3 +1,4 @@
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 # Fuse by Rari Capital: Uniswap V2 TWAP Bot
 
 This repository contains the JavaScript source code for the Fuse Uniswap V2 TWAP Bot. See [here for the Fuse dApp](https://github.com/Rari-Capital/fuse-dapp), [here for the Fuse SDK](https://github.com/Rari-Capital/fuse-sdk), or [here for the Fuse contracts](https://github.com/Rari-Capital/fuse-contracts).

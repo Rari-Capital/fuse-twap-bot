@@ -1,0 +1,21 @@
+{
+  "name": "Fuse Twap Bot",
+  "description": "A multiplayer drawing game for the browser",
+  "repository": "https://github.com/Midas-Protocol/fuse-twap-bot",
+  "keywords": ["twap", "blockchain", "uniswap"],
+  "stack": "container",
+  "env": {
+    "ETHEREUM_ADMIN_ACCOUNT": {
+      "description": "Ethereum account that will post the prices to the oracle",
+      "required": true
+    },
+    "ETHEREUM_ADMIN_PRIVATE_KEY": {
+      "description": "Private key of the account that will post the prices to the oracle",
+      "required": true
+    },
+    "SUPPORTED_PAIRS": {
+      "description": "Comma-separated values of For example: FRAX/USDC (Uniswap), YFI/ETH (SushiSwap)",
+      "required": true
+    }
+  }
+}
