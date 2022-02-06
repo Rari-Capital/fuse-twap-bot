@@ -17,9 +17,8 @@ at the expense of your users.
 ### Heroku
 
 You can run this bot on Heroku on their free tier using the Deploy to Heroku button. Upon clicking it,
-you'll be prompted to enter a few Heroku-specific parameters, as well as a few variables required to run the
-bot appropriately. Namely:
-
+you'll be prompted to enter the bot name and the region where it'll be running. You'll also be required to pass
+a few variables required by the bot. Namely:
 
 1. `ETHEREUM_ADMIN_ACCOUNT`: Ethereum account that will post the prices to the oracle
 2. `ETHEREUM_ADMIN_PRIVATE_KEY`: Private key of the account that will post the prices to the oracle
@@ -30,6 +29,28 @@ bot appropriately. Namely:
 These are for instance, the FRAX/USDC Uniswap address pairs, and the YFI/ETH SushiSwap pairs. 
 4. `WEB3_HTTP_PROVIDER_URL`: Your node provider URL. Infura or otherwise
 5. `ROOT_PRICE_ORACLE_CONTRACT_ADDRESS`: the root oracle address, defaults to Rari's [deployed mainnet oracle address](https://etherscan.io/address/0xf1860b3714f0163838cf9ee3adc287507824ebdb)
+
+**NOTE**: make sure the Ethereum account has sufficient funds to make its transactions!
+
+Then, click on "Deploy App".
+
+All going smoothly, your app should be deployed. If you're using Heroku's free tier, you'll have to assign a Dyno to
+the app. On your [heroku dashboard](https://dashboard.heroku.com/apps/), click on your app -> Resources -> Edit Button![Edit button](./assets/scale.png)
+and flip the switch on. Your bot should be now running!
+
+Alternatively, if you have the heroku cli installed, run:
+
+```shell
+>>> heroku login -i 
+...
+>>> heroku ps:scale worker=1 -a <app name>
+```
+
+The logs of the bot can be accessed via the UI: Heroku Dashboard -> App -> More Button -> View Logs or with the CLI command:
+
+```shell
+>>> heroku logs <app name>
+```
 
 ### DIY
 
