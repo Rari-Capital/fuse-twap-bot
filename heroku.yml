@@ -7,3 +7,5 @@ build:
     WEB3_HTTP_PROVIDER_URL: "localhost:8485"
   docker:
     worker: Dockerfile
+run:
+  worker: pm2-runtime ecosystem.config.js
