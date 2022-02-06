@@ -18,7 +18,7 @@
       "required": true
     },
     "WEB3_HTTP_PROVIDER_URL": {
-      "description": "Comma-separated values of For example: FRAX/USDC (Uniswap), YFI/ETH (SushiSwap)",
+      "description": "Your node provider URL. Infura or otherwise.",
       "required": true
     },
     "ROOT_PRICE_ORACLE_CONTRACT_ADDRESS": {
